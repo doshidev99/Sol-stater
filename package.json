@@ -1,0 +1,24 @@
+{
+  "name": "solidity-stater",
+  "version": "1.0.0",
+  "description": "- Solidity     - Security smartcontract         - [backdoor](https://cryptonews.com/exclusives/are-you-sure-there-is-no-backdoor-to-your-coins-2415.htm) : backdoor trong code của SC         - Reentrancy:     - ERC20 chuẩn chung về tokens     - Các chương trình được dev trên solidity sẽ được chạy trên nền EVM         - EVM được mô tả như một máy tính ảo trên blockchain, biến Sol code thành các ứng dụng chạy trên nền Ethereum     - Kiểu dữ liệu **`static type`**         - Khi không gán giá trị cho variable → sẽ có giá trị mặc định ⇒ không có `null` và `undefined`             - uint = 0             - bool = false             - String = “”         - (u)int : (Unsigned) Integer             - uint: 8 - 255             - int8: -128 → +127             - uint256 ⇒ 2^256         - string             - không có các `manipulation` functions : .length(), add() ….             - không có string `comparison`             - EVM có 3 nơi để lưu trữ                 - Storage: Mỗi contract sẽ có 1 bộ nhớ riêng, bộ nhớ không đổi ở mỗi lần call function. Do đó nó t`ốn chi phí rất nhiều khi sử dụng`                 - Memory: nơi lưu trữ các dữ liệu tạm thời, thường được sử dụng trong các tham số và sử dụng external của hàm. Do đó, nó sẽ bị xóa đi sau khi kết thúc hàm nên chi phí sử dụng sẽ `ít hơn`                 - Stack: nơi lữu trữ các biến local, nhỏ         - boolean         - address             - 1 address chiếm 20 byte             - address và address payable khác nhau             - có 2 thành phần quan trọng                 - .balance                 - transfer(amount)         - string và bytes             - cả 2 đều là array             - String `k get` đc length và index-access             - Bytes: dữ liệu thô và cô độ dài tùy ý             - hạn chế dùng `String` : có độ dài tùy ý và gồm các chuỗi UTF-8             - dùng `memory` để cache tham số tạm thời             - Note:                 - Không có giá trị   `null` và `undefined`                 - Không đc phép function = name với variable                 - không gán giá trị dạng `phủ định` cho kiểu `boolean`                 - Với các biến được khai báo với kiểu `public` khi compile sẽ tự động tạo 1 getter function cho biến đó     - Advanced type         - Mapping             - Giống `hash maps`             - mapping(keyType → valueType) name;             - value khởi tạo mặc định → ko có length             - public state của mapping → getter             - iterable mapping thực hiện cần dùng lib             -",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phamdongtruong99/Sol-stater.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phamdongtruong99/Sol-stater/issues"
+  },
+  "homepage": "https://github.com/phamdongtruong99/Sol-stater#readme",
+  "dependencies": {
+    "web3": "^1.8.0",
+    "web3.js-browser": "^0.2.0"
+  }
+}

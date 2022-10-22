@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="node_modules/web3.js-browser/build/web3.js"></script>
+</head>
+
+<body>
+  <script>
+    const W3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));
+    W3.eth.getAccounts().then(addresses => {
+      addresses.map(address => {
+        W3.eth.getBalance(address).then(balance => {
+          const balanceOf = W3.utils.fromWei(balance, "ether");
+          console.log({
+            address,
+            balance: balanceOf
+          });
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

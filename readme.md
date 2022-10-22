@@ -205,15 +205,15 @@
         
         - FUNCTIONHASHES
             - mã hóa các name function
-        - Interaction : tương tác ASSEMBLY low level
+        - Interaction : tương tác
             - Tương tác `low level` các `data fields`
             - Client sử dụng `ABI` Application Binary Interface
             - Abi chứa functions, parameters, return values của contract
     - Library
         - sử dụng key word `library`
-        - Toàn bộ method và thuộc tính được Ethereum reuse thông qua `DELEGATECALL` feature
+        - Toàn bộ method và thuộc tính được Ethereum reuse thông qua `[DELEGATECALL](https://www.notion.so/Solidity-Stater-2be162ae792945369b13d36e657da635)` feature
         - Limitation
-            - không có storage nào
+            - không có storage nào, không chứa được các biến lưu state ..
             - không hold ethers : k có payable
             - không kế thừa
         - Deploy
@@ -221,8 +221,117 @@
             - Linked Library: library sử dụng `internal` và `external` function thì lúc này cần deploy lên blockchain
     - Naming convention
         - private function start with an underscore ( _ )
+    - ****Delegate call Function****
+        - low level function trong solidity
+        - Contract A `delegate call` đến contract B
+        - Call
+            - Call function
+                
+                ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%203.png)
+                
+                ```solidity
+                // SPDX-License-Identifier: GPL-3.0
+                
+                pragma solidity >=0.7.0 <0.9.0;
+                
+                contract B {
+                    uint public num;
+                    address public sender;
+                    uint public value;
+                
+                    function setNewValue(uint _newNum) public payable {
+                        num = _newNum;
+                        sender = msg.sender;
+                        value = msg.value;
+                    }
+                }
+                
+                contract B2 {
+                    uint public num;
+                    address public sender;
+                    uint public value;
+                
+                    function setNewValue(uint _newNum) public payable {
+                        num = _newNum * 2;
+                        sender = msg.sender;
+                        value = msg.value;
+                    }
+                }
+                
+                contract A {
+                    uint public num;
+                    address public sender;
+                    uint public value;
+                
+                    function setNewValue(address _contract, uint _newNum) public payable {
+                        // uint = uint256
+                        B(_contract).setNewValue(_newNum);
+                        sender = msg.sender;
+                        value = msg.value;
+                    }
+                }
+                ```
+                
+            - delagate call functions :
+                - Lấy context của `contract A` để thực hiện
+                    
+                    ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%204.png)
+                    
+            
+            ```solidity
+            // SPDX-License-Identifier: GPL-3.0
+            
+            pragma solidity >=0.7.0 <0.9.0;
+            
+            contract B {
+                uint public num;
+                address public sender;
+                uint public value;
+            
+                function setNewValue(uint _newNum) public payable {
+                    num = _newNum;
+                    sender = msg.sender;
+                    value = msg.value;
+                }
+            }
+            
+            contract B2 {
+                uint public num;
+                address public sender;
+                uint public value;
+            
+                function setNewValue(uint _newNum) public payable {
+                    num = _newNum * 2;
+                    sender = msg.sender;
+                    value = msg.value;
+                }
+            }
+            
+            contract A {
+                uint public num;
+                address public sender;
+                uint public value;
+            
+                function setNewValue(address _contract, uint _newNum) public payable {
+                    // uint = uint256
+                    (bool success, bytes memory result) = _contract.delegatecall(
+                        abi.encodeWithSignature("setNewValue(uint256)", _newNum)
+                    );
+            
+                    require(success, "Transaction failed");
+                }
+            }
+            ```
+            
+        - Ứng dụng:
+            - upgradeable Contract
+                
+                ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%205.png)
+                
     - Security
         - modifier vs reentrancy
+            
+            
     - Note:
         - `ethers` không lưu trữ trên ví mà lưu trữ trên block chain ( xem được balance và transfer )
         - Nhập giá trị thì hàm không cần `return` và ngược lại
@@ -272,7 +381,7 @@
         
     - Defi Ex: Thanh khoản cho app phát hành token
         
-        ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%203.png)
+        ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%206.png)
         
         - IDO ( initial DEX offering ) : Mở bán token phi tập trung phải tạo các cặp tokens ( Liquidity pool )
         - LP : một smart contract để quản lí tỉ giá cũng như các lệnh chuyển đổi giữa 2 loại token
@@ -281,7 +390,7 @@
         - Thay vì chỉ hold giả sử `BNB` → add liquidity → lấy lợi nhuận: Yield Farming
     - Cách tính tỉ giá của sàn DEX
         
-        ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%204.png)
+        ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%207.png)
         
         [https://docs.liquidswap.com/protocol-overview](https://docs.liquidswap.com/protocol-overview)
         
@@ -350,7 +459,10 @@
         - Event
             - Must trigger event `Transfer` , `Approval`
     - Web3js
-        - Web3 connect rpc
+        - Web3 connect `RPC  | IPC | WS`
+        - 1 Thư viện javascrip
+        - Cầu nối `giao tiếp` giữa FE và Ethereum Blockchain
+        - Một số chức năng tiêu biểu: tạo account, thực hiện tx …
 - QIT Quick start
     - Blockchain là gì ?
         - Điểm đặc biệt của blockchain
@@ -374,7 +486,7 @@
             - một wallet có thể tạo ra nhiều địa chỉ ví
         - Private key
             
-            ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%205.png)
+            ![Untitled](Solidity%20Stater%202be162ae792945369b13d36e657da635/Untitled%208.png)
             
         - Các loại address
             - EOA : **`Externally Owned Account`**

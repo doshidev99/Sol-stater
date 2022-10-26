@@ -1,5 +1,6 @@
 const MyTokenContract = artifacts.require("MyToken");
 const MyTokenSale = artifacts.require("MyTokenSale");
+const KycContract = artifacts.require("KycContract");
 
 const chai = require("./setup_chai");
 const BN = web3.utils.BN;
@@ -25,13 +26,42 @@ contract("MyTokenSale", async (accounts) => {
     expect(balanceOfTokenSaleSC).to.be.a.bignumber.equal(new BN(totalSupply));
   });
 
-  it("Should be possible to buy one token buy simply sending Ether to the smart contract", async () => {
+  it("Can't be possible to buy one token if u are not in white list", async () => {
     const tokenInstance = await MyTokenContract.deployed();
     const tokenSaleInstance = await MyTokenSale.deployed();
 
     const balanceBeforeAccount = await tokenInstance.balanceOf.call(
       anotherAccount
     );
+
+    const _amount = web3.utils.toWei("1", "wei");
+
+    await expect(
+      tokenSaleInstance.sendTransaction({
+        from: anotherAccount,
+        value: _amount,
+      })
+    ).to.be.fulfilled;
+
+    const balanceAfterAccount = await tokenInstance.balanceOf.call(
+      anotherAccount
+    );
+
+    await expect(balanceBeforeAccount.addn(1)).to.be.a.bignumber.equal(
+      balanceAfterAccount
+    );
+  });
+
+  it("Should be possible to buy one token buy simply sending Ether to the smart contract after adding white list", async () => {
+    const tokenInstance = await MyTokenContract.deployed();
+    const tokenSaleInstance = await MyTokenSale.deployed();
+    const KycContractInstance = await KycContract.deployed();
+
+    const balanceBeforeAccount = await tokenInstance.balanceOf.call(
+      anotherAccount
+    );
+
+    await KycContractInstance.setKyc(anotherAccount);
 
     const _amount = web3.utils.toWei("1", "wei");
 

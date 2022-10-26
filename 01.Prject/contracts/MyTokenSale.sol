@@ -8,7 +8,7 @@ contract MyTokenSale is Crowdsale {
     KycContract kyc;
 
     constructor(
-        uint256 rate,
+        uint256 rate, // rate in TKNbits
         address payable wallet,
         IERC20 token,
         KycContract _kyc
